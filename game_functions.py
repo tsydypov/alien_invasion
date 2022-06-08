@@ -47,7 +47,7 @@ def get_number_aliens_x(ai_settings, alien_width):
 def get_number_rows(ai_settings, ship_height, alien_height):
     """Determine the number rows on the screen"""
     available_space_y = ai_settings.screen_height - (3 * alien_height) - ship_height
-    number_rows = int(available_space_y - (2 * alien_height))
+    number_rows = int(available_space_y / (2 * alien_height))
     return number_rows
 
 
@@ -77,6 +77,27 @@ def fire_bullet(ai_settings, screen, ship, bullets):
     if len(bullets) < ai_settings.bullets_allowed:
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
+
+
+def check_fleet_edges(ai_settings, aliens):
+    """Respond appropriately if any aliens have reached an edge"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(ai_settings, aliens)
+            break
+
+
+def change_fleet_direction(ai_settings, aliens):
+    """Drop the fleet and change direction of fleet"""
+    for alien in aliens.sprites():
+        alien.rect.y += ai_settings.fleet_drop_speed
+    ai_settings.fleet_direction *= -1
+
+
+def update_aliens(ai_settings, aliens):
+    """If fleet at the edge of screen, update position of aliens in a fleet"""
+    check_fleet_edges(ai_settings, aliens)
+    aliens.update()
 
 
 def update_bullets(bullets):
