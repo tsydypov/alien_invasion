@@ -82,18 +82,20 @@ def fire_bullet(ai_settings, screen, ship, bullets):
 
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
     """Process the collision of ship and alien"""
-    # Decrement ships_left
-    stats.ships_left -= 1
+    if stats.ships_left > 0:
+        # Decrement ships_left
+        stats.ships_left -= 1
 
-    # Clean lists of aliens and bullets
-    aliens.empty()
-    bullets.empty()
+        # Clean lists of aliens and bullets
+        aliens.empty()
+        bullets.empty()
 
-    # Create a ship in center and a new fleet
-    create_fleet(ai_settings, screen, ship, aliens)
-    ship.center_ship()
-
-    sleep(0.5)
+        # Create a ship in center and a new fleet
+        create_fleet(ai_settings, screen, ship, aliens)
+        ship.center_ship()
+        sleep(0.5)
+    else:
+        stats.game_active = False
 
 
 def check_fleet_edges(ai_settings, aliens):
